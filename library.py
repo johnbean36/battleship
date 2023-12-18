@@ -86,3 +86,64 @@ def convert_coordinates(coordinate):
             error = False
             print('b')
     return top_index, left, error
+
+def find_middle(ship_list, size):
+    last = len(ship_list) - 1
+    size = int(size) - 1
+    if (ship_list[0][0] == ship_list[last][0] or ship_list[0][1] == ship_list[last][1]) and last == size:
+        pass
+    else:
+        return False
+
+def carrier_coordinates():
+    carrier_list = []
+    carrier = ""
+    temp_list = []
+    top = 0
+    left = 0
+    error = False
+    print("Enter first coordinate for Carrier ex B4")
+    print("Carriers are 5 slots:")
+    try:
+        while(True):
+            try:
+                carrier = input()
+                if carrier.lower() == "quit":
+                    return temp_list, False
+                top, left, error = convert_coordinates(carrier)
+                if error == True:
+                    raise ValueError('Coordinate invalid')
+                break
+            except Exception as e:
+                print(e)
+        temp_list.append(top)
+        temp_list.append(left)
+        carrier_list.append(temp_list.copy())
+        temp_list.clear()
+        for i in range(0,3):
+            temp_list.append('')
+            temp_list.append('')
+            carrier_list.append(temp_list.copy())
+            temp_list.clear()
+        print("Enter last coordinate for Carrier: ")
+        while(True):
+            try:
+                carrier = input()
+                if carrier.lower() == "quit":
+                    return temp_list, False
+                top, left, error = convert_coordinates(carrier)
+                if error == True:
+                    raise ValueError('Coordinate Invalid')
+                break
+            except Exception as e:
+                print(e)
+        temp_list.append(top)
+        temp_list.append(left)
+        carrier_list.append(temp_list.copy())
+        temp_list.clear()
+        if find_middle(carrier_list, int(5)) == False:
+            raise ValueError("Coordinates invalid please try again")
+    except Exception as e:
+        print(e)
+    return carrier_list, True
+
