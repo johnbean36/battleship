@@ -33,6 +33,8 @@ def board():
     
     return board_list
 
+#converts coordinates such as A4 into coordinates that can coorispond to the
+#indices for location in the ship lists
 def convert_coordinates(coordinate):
     left = 0
     top = 0
@@ -87,30 +89,49 @@ def convert_coordinates(coordinate):
             print('b')
     return top_index, left, error
 
+#fill the coordinates in the carrier list between the starting and ending coordinates
+#the user provided
 def find_middle(ship_list, size):
+    temp_list = []
     last = len(ship_list) - 1
     size = int(size) - 1
     if (ship_list[0][0] == ship_list[last][0] or ship_list[0][1] == ship_list[last][1]) and last == size:
-        pass
+        if ship_list[0][0] == ship_list[last][0]:
+            if size == 2:
+                return False
+            if ship_list[size][1] > ship_list[0][1]:
+                for i in range(1, size):
+                    temp_list.append(ship_list[0][0])
+                    temp_list.append(ship_list[0][1]+i)
+                    ship_list[i] = temp_list.copy()
+                    temp_list.clear()
+            else:
+                print(size)
+                for i in range(2, size):
+                    temp_list.append(ship_list[-1][0])
+                    temp_list.append(ship_list[-1][1]+(i-1))
+                    ship_list[i*-1] = temp_list.copy()
+                    temp_list.clear()
     else:
         return False
 
-def carrier_coordinates():
-    carrier_list = []
-    carrier = ""
+#Asks the user for two coordinates that are the starting and ending coordinates
+#of the ship, checks to make sure the coordinates are valid and returns the list
+#mainloop
+def get_coordinates(ship_name, ship_size):
+    ship_list = []
+    ship = ""
     temp_list = []
     top = 0
     left = 0
     error = False
-    print("Enter first coordinate for Carrier ex B4")
-    print("Carriers are 5 slots:")
     try:
         while(True):
             try:
-                carrier = input()
-                if carrier.lower() == "quit":
+                ship = input()
+                if ship.lower() == "quit":
                     return temp_list, False
-                top, left, error = convert_coordinates(carrier)
+                top, left, error = convert_coordinates(ship)
                 if error == True:
                     raise ValueError('Coordinate invalid')
                 break
@@ -118,20 +139,21 @@ def carrier_coordinates():
                 print(e)
         temp_list.append(top)
         temp_list.append(left)
-        carrier_list.append(temp_list.copy())
+        ship_list.append(temp_list.copy())
         temp_list.clear()
-        for i in range(0,3):
-            temp_list.append('')
-            temp_list.append('')
-            carrier_list.append(temp_list.copy())
-            temp_list.clear()
-        print("Enter last coordinate for Carrier: ")
+        if ship_size > 2:
+            for i in range(0,ship_size-2):
+                temp_list.append('')
+                temp_list.append('')
+                ship_list.append(temp_list.copy())
+                temp_list.clear()
+        print("Enter last coordinate for " + ship_name + ": ")
         while(True):
             try:
-                carrier = input()
-                if carrier.lower() == "quit":
+                ship = input()
+                if ship.lower() == "quit":
                     return temp_list, False
-                top, left, error = convert_coordinates(carrier)
+                top, left, error = convert_coordinates(ship)
                 if error == True:
                     raise ValueError('Coordinate Invalid')
                 break
@@ -139,11 +161,10 @@ def carrier_coordinates():
                 print(e)
         temp_list.append(top)
         temp_list.append(left)
-        carrier_list.append(temp_list.copy())
+        ship_list.append(temp_list.copy())
         temp_list.clear()
-        if find_middle(carrier_list, int(5)) == False:
+        if find_middle(ship_list, int(5)) == False:
             raise ValueError("Coordinates invalid please try again")
     except Exception as e:
         print(e)
-    return carrier_list, True
-
+    return ship_list, True
