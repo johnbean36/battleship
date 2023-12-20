@@ -26,9 +26,8 @@ def board():
     board_list.append("5 |   |   |   |   |   |   |   |   |   |   |\n")
     board_list.append("6 |   |   |   |   |   |   |   |   |   |   |\n")
     board_list.append("7 |   |   |   |   |   |   |   |   |   |   |\n")
-    board_list.append("7 |   |   |   |   |   |   |   |   |   |   |\n")
     board_list.append("8 |   |   |   |   |   |   |   |   |   |   |\n")
-    board_list.append("8 |   |   |   |   |   |   |   |   |   |   |\n")
+    board_list.append("9 |   |   |   |   |   |   |   |   |   |   |\n")
     board_list.append("10|___|___|___|___|___|___|___|___|___|___|\n")
     
     return board_list
@@ -133,13 +132,13 @@ def find_middle(ship_list, size):
                 temp_swap.append(ship_list[-1][0])
                 temp_swap.append(ship_list[-1][1])
                 ship_list[-1] = temp_list.copy()
-                ship_list[0] = swap_list.copy()
+                ship_list[0] = temp_swap.copy()
                 for i in range(1, size):
                     temp_list.append(ship_list[0][0]+i)
                     temp_list.append(ship_list[0][1])
                     ship_list[i] = temp_list.copy()
                     temp_list.clear()
-                    swap_list.clear()   
+                    temp_swap.clear()   
     else:
         return True
 
@@ -157,7 +156,8 @@ def get_coordinates(ship_name, ship_size):
         while(True):
             try:
                 ship = input()
-                if ship.lower() == "quit":
+                ship = ship.upper()
+                if ship == "QUIT":
                     return temp_list, False
                 top, left, error = convert_coordinates(ship)
                 if error == True:
@@ -179,7 +179,8 @@ def get_coordinates(ship_name, ship_size):
         while(True):
             try:
                 ship = input()
-                if ship.lower() == "quit":
+                ship = ship.upper()
+                if ship == "QUIT":
                     return temp_list, False
                 top, left, error = convert_coordinates(ship)
                 if error == True:
@@ -196,3 +197,4 @@ def get_coordinates(ship_name, ship_size):
     except Exception as e:
         print(e)
     return ship_list, True
+
