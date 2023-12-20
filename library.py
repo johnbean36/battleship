@@ -93,27 +93,55 @@ def convert_coordinates(coordinate):
 #the user provided
 def find_middle(ship_list, size):
     temp_list = []
-    last = len(ship_list) - 1
-    size = int(size) - 1
-    if (ship_list[0][0] == ship_list[last][0] or ship_list[0][1] == ship_list[last][1]) and last == size:
-        if ship_list[0][0] == ship_list[last][0]:
+    temp_swap = []
+    if (ship_list[0][0] == ship_list[-1][0] or ship_list[0][1] == ship_list[-1][1]) and len(ship_list) == size:
+        if ship_list[0][0] == ship_list[-1][0]:
             if size == 2:
                 return False
-            if ship_list[size][1] > ship_list[0][1]:
+            if ship_list[-1][1] > ship_list[0][1]:
                 for i in range(1, size):
                     temp_list.append(ship_list[0][0])
                     temp_list.append(ship_list[0][1]+i)
                     ship_list[i] = temp_list.copy()
                     temp_list.clear()
-            else:
-                print(size)
-                for i in range(2, size):
-                    temp_list.append(ship_list[-1][0])
-                    temp_list.append(ship_list[-1][1]+(i-1))
-                    ship_list[i*-1] = temp_list.copy()
+            elif ship_list[size][1] < ship_list[0][1]:
+                temp_list.append(ship_list[0][0])
+                temp_list.append(ship_list[0][1])
+                temp_swap.append(ship_list[-1][0])
+                temp_swap.append(ship_list[-1][1])
+                ship_list[0] = temp_swap.copy()
+                temp_swap.clear()
+                ship_list[-1] = temp_list.copy()
+                temp_list.clear()
+                for i in range(1, size):
+                    temp_list.append(ship_list[0][0])
+                    temp_list.append(ship_list[0][1]+i)
+                    ship_list[i] = temp_list.copy()
                     temp_list.clear()
+        elif ship_list[0][1] == ship_list[-1][1]:
+            if size == 2:
+                return False
+            if ship_list[-1][0] > ship_list[0][0]:
+                for i in range(1, size):
+                    temp_list.append(ship_list[0][0]+i)
+                    temp_list.append(ship_list[0][1])
+                    ship_list[i] = temp_list.copy()
+                    temp_list.clear()
+            elif ship_list[-1][0] < ship_list[0][0]:
+                temp_list.append(ship_list[0][0])
+                temp_list.append(ship_list[0][1])
+                temp_swap.append(ship_list[-1][0])
+                temp_swap.append(ship_list[-1][1])
+                ship_list[-1] = temp_list.copy()
+                ship_list[0] = swap_list.copy()
+                for i in range(1, size):
+                    temp_list.append(ship_list[0][0]+i)
+                    temp_list.append(ship_list[0][1])
+                    ship_list[i] = temp_list.copy()
+                    temp_list.clear()
+                    swap_list.clear()   
     else:
-        return False
+        return True
 
 #Asks the user for two coordinates that are the starting and ending coordinates
 #of the ship, checks to make sure the coordinates are valid and returns the list
@@ -163,7 +191,7 @@ def get_coordinates(ship_name, ship_size):
         temp_list.append(left)
         ship_list.append(temp_list.copy())
         temp_list.clear()
-        if find_middle(ship_list, int(5)) == False:
+        if find_middle(ship_list, ship_size) == True:
             raise ValueError("Coordinates invalid please try again")
     except Exception as e:
         print(e)
