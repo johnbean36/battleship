@@ -14,6 +14,8 @@ battleship_list = []
 cruiser_list = []
 submarine_list = []
 destroyer_list = []
+temp_str = ""
+strtolst = []
 
 print("by John Bass\n\n")
 print("At any time type quit to exit the game")
@@ -25,6 +27,13 @@ while(main_loop):
     print("Enter first coordinate for Carrier ex. B4")
     print("Carriers are 5 slots:")
     carrier_list, main_loop = library.get_coordinates("Carrier", 5)
+    library.player_board(carrier_list, board, 5)
+    if os.name == 'nt':
+        os.system('cls')
+    else:
+        os.system('clear')
+    for num in range(12):
+        print(board[num])
     while check:
         print("Enter first coordinate for Battleship")
         print("Battleships are 4 slots:")
@@ -36,6 +45,13 @@ while(main_loop):
                 break
         if battleship_list != []:
             check = False
+    library.player_board(battleship_list, board, 4)
+    if os.name == 'nt':
+        os.system('cls')
+    else:
+        os.system('clear')
+    for num in range(12):
+        print(board[num])
     check = True
     while check:
         print("Enter first coordinate for Cruiser")
@@ -52,6 +68,13 @@ while(main_loop):
                 break
         if cruiser_list != []:
             check = False
+    library.player_board(cruiser_list, board, 3)
+    if os.name == 'nt':
+        os.system('cls')
+    else:
+        os.system('clear')
+    for num in range(12):
+        print(board[num])
     check = True
     while check:
         print("Enter first coordinate for Submarine")
@@ -72,6 +95,13 @@ while(main_loop):
                 break
         if submarine_list != []:
             check = False
+    library.player_board(submarine_list, board, 3)
+    if os.name == 'nt':
+        os.system('cls')
+    else:
+        os.system('clear')
+    for num in range(12):
+        print(board[num])
     check = True
     while check:
         print("Enter first coordinate for Destroyer")
@@ -96,6 +126,13 @@ while(main_loop):
                 break
         if destroyer_list != []:
             check = False
+    library.player_board(destroyer_list, board, 2)
+    if os.name == 'nt':
+        os.system('cls')
+    else:
+        os.system('clear')
+    for num in range(12):
+        print(board[num])
     
     print("Do you want to play another game(y/n)")
     while True:

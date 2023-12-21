@@ -198,3 +198,14 @@ def get_coordinates(ship_name, ship_size):
         print(e)
     return ship_list, True
 
+def player_board(ship_list, board, size):
+    ship_temp = []
+    temp_str = ""
+    strtolst = ""
+    for i in range(0, size):
+        ship_temp = ship_list[i]
+        temp_str = board[2+ship_temp[1]]
+        strtolst = list(temp_str)
+        strtolst[4+(ship_temp[0]*4)] = u"\u2588"
+        temp_str = ''.join(strtolst)
+        board[2+ship_temp[1]] = temp_str
