@@ -1,3 +1,5 @@
+import random
+
 def welcome():
     welcome_splash ="""\
      __          __  _                                         
@@ -209,3 +211,51 @@ def player_board(ship_list, board, size):
         strtolst[4+(ship_temp[0]*4)] = u"\u2588"
         temp_str = ''.join(strtolst)
         board[2+ship_temp[1]] = temp_str
+
+def ai_get_coordinates(size):
+    ship_list = []
+    ship = ""
+    temp_list = []
+    h_or_v = 0
+    check = True
+    
+    while check:
+        temp_list.append(random.randint(0,9))
+        temp_list.append(random.randint(0,9))
+        ship_list.append(temp_list.copy())
+        temp_list.clear()
+        h_or_v = random.randint(0,1)
+        if h_or_v == 0:
+            if ship_list[0][0] + size-1 > 9:
+                ship_list.clear()
+                continue
+            else:
+                if size > 2:
+                    for i in range(0, size-2):
+                        temp_list.append('')
+                        temp_list.append('')
+                        ship_list.append(temp_list.copy())
+                        temp_list.clear()
+                temp_list.append(ship_list[0][0] + size-1)
+                temp_list.append(ship_list[0][1])
+                ship_list.append(temp_list.copy())
+                temp_list.clear()
+            check = False
+        elif h_or_v == 1:
+            if ship_list[0][1] + size-1 > 9:
+                ship_list.clear()
+                continue
+            else:
+                if size > 2:
+                    for i in range(0, size-2):
+                        temp_list.append('')
+                        temp_list.append('')
+                        ship_list.append(temp_list.copy())
+                        temp_list.clear()
+                temp_list.append(ship_list[0][0])
+                temp_list.append(ship_list[0][1] + size-1)
+                ship_list.append(temp_list.copy())
+                temp_list.clear()
+            check = False
+    find_middle(ship_list, size)
+    return ship_list

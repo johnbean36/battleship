@@ -16,13 +16,21 @@ submarine_list = []
 destroyer_list = []
 temp_str = ""
 strtolst = []
+ai_battleship_list = []
+ai_carrier_list = []
+ai_cruiser_list = []
+ai_submarine_list = []
+ai_destroyer_list = []
 
 print("by John Bass\n\n")
 print("At any time type quit to exit the game")
 board = library.board()
+attack_board = library.board()
+
 for num in range(12):
     print(board[num])
 while(main_loop):
+
     check = True
     print("Enter first coordinate for Carrier ex. B4")
     print("Carriers are 5 slots:")
@@ -133,11 +141,68 @@ while(main_loop):
         os.system('clear')
     for num in range(12):
         print(board[num])
+
+    ai_carrier_list = library.ai_get_coordinates(5)
+    check = True
+    while check:
+        ai_battleship_list = library.ai_get_coordinates(4)
+        for i in ai_battleship_list:
+            if i in ai_carrier_list:
+                ai_battleship_list.clear()
+                continue
+        check = False
+    check = True
+    while check:
+        ai_cruiser_list = library.ai_get_coordinates(3)
+        for i in ai_cruiser_list:
+            if i in ai_carrier_list:
+                ai_carrier_list.clear()
+                continue
+            elif i in ai_battleship_list:
+                ai_battleship_list.clear()
+                continue
+        check = False
+    check = True
+    while check:
+        ai_submarine_list = library.ai_get_coordinates(3)
+        for i in ai_submarine_list:
+            if i in ai_carrier_list:
+                ai_submarine_list.clear()
+                continue
+            elif i in ai_battleship_list:
+                ai_submarine_list.clear()
+                continue
+            elif i in ai_cruiser_list:
+                ai_submarine_list.clear()
+                continue
+        check = False
+    check = True
+    while check:
+        ai_destroyer_list = library.ai_get_coordinates(2)
+        for i in ai_destroyer_list:
+            if i in ai_carrier_list:
+                ai_destroyer_list.clear()
+                continue
+            elif i in ai_battleship_list:
+                ai_destroyer_list.clear()
+                continue
+            elif i in ai_cruiser_list:
+                ai_destroyer_list.clear()
+                continue
+            elif i in ai_submarine_list:
+                ai_destroyer_list.clear()
+                continue
+        check = False
+    print(ai_carrier_list)
+    print(ai_battleship_list)
+    print(ai_cruiser_list)
+    print(ai_submarine_list)
+    print(ai_destroyer_list)
     
     print("Do you want to play another game(y/n)")
     while True:
-        if input().upper == 'N' or "NO":
+        if input().upper() == 'N' or input().upper() == "NO":
             main_loop = False
             break
-        elif input.upper == 'Y' or "YES":
+        elif input().upper() == 'Y' or input().upper() == "YES":
             break
