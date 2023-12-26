@@ -85,9 +85,6 @@ def convert_coordinates(coordinate):
         top_index = 9
     else:
         error = True
-        if coordinate == 'quit':
-            error = False
-            print('b')
     return top_index, left, error
 
 #fill the coordinates in the carrier list between the starting and ending coordinates
@@ -159,8 +156,6 @@ def get_coordinates(ship_name, ship_size):
             try:
                 ship = input()
                 ship = ship.upper()
-                if ship == "QUIT":
-                    return temp_list, False
                 top, left, error = convert_coordinates(ship)
                 if error == True:
                     raise ValueError('Coordinate invalid')
@@ -259,3 +254,55 @@ def ai_get_coordinates(size):
             check = False
     find_middle(ship_list, size)
     return ship_list
+
+def update_attack_board(attack_board, attack_coordinate, ship1, ship2, ship3, ship4, ship5):
+    board_text = ""
+    temp_list = []
+    attack = False
+    temp_str = ""
+    ship_number = 0
+    print(ship1)
+    print(ship2)
+    print(ship3)
+    print(ship4)
+    print(ship5)
+    if attack_coordinate in ship1:
+        attack = True
+        ship_number = 1
+    elif attack_coordinate in ship2:
+        attack = True
+        ship_number = 2
+    elif attack_coordinate in ship3:
+        attack = True
+        ship_number = 3
+    elif attack_coordinate in ship4:
+        attack = True
+        ship_number = 4
+    elif attack_coordinate in ship5:
+        attack = True
+        ship_number = 5
+    else:
+        attack = False
+
+    board_text = attack_board[attack_coordinate[1]+2]
+    if attack == True:
+        temp_list = list(board_text)
+        temp_list[4+attack_coordinate[0]*4] = u"\u00D7"
+        temp_str = ''.join(temp_list)
+        attack_board[attack_coordinate[1]+2] = temp_str
+        if ship_number == 1:
+            return True, ship1
+        elif ship_number == 2:
+            return True, ship2
+        elif ship_number == 3:
+            return True, ship3
+        elif ship_number == 4:
+            return True, ship4
+        elif ship_number == 5:
+            return True, ship5
+    elif attack == False:
+        temp_list = list(board_text)
+        temp_list[4+attack_coordinate[0]*4] = u"\u20DD"
+        temp_str = ''.join(temp_list)
+        attack_board[attack_coordinate[1]+2] = temp_str
+        return False, temp_list
