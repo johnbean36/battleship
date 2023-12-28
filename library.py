@@ -1,5 +1,6 @@
 import random
 
+#Displays the welcome splash at the beginning of the game when called
 def welcome():
     welcome_splash ="""\
      __          __  _                                         
@@ -16,7 +17,7 @@ def welcome():
                                                         | |    
                                                         |_| """
     print(welcome_splash)
-
+#Assigns the ascii board to a list variable when called
 def board():
     board_list = []
     board_list.append("    A   B   C   D   E   F   G   H   I   J\n")
@@ -49,8 +50,6 @@ def convert_coordinates(coordinate):
         return 0, 0, True
     if len(coordinate) > 3 or (len(coordinate) == 3 and int(coordinate[1]) > 1) or (len(coordinate) == 3 and int(coordinate[2]) > 0):
         error = True
-        if coordinate == 'quit':
-            error = False
     if len(coordinate) > 2:
         try:
             val = int(coordinate[2])
@@ -175,25 +174,33 @@ def get_coordinates(ship_name, ship_size):
         print("Enter last coordinate for " + ship_name + ": ")
         while(True):
             try:
-                ship = input()
-                ship = ship.upper()
-                if ship == "QUIT":
-                    return temp_list, False
-                top, left, error = convert_coordinates(ship)
-                if error == True:
-                    raise ValueError('Coordinate Invalid')
-                break
+                while (len(ship_list) < ship_size):
+                    ship = input()
+                    ship = ship.upper()
+                    top, left, error = convert_coordinates(ship)
+                    temp_list.append(top)
+                    temp_list.append(left)
+                    ship_list.append(temp_list.copy())
+                    if temp_list[0] == ship_list[0][0]:
+                        if (temp_list[1] > ship_list[0][1] + ship_size):
+                            error = True
+                            ship_list.pop(ship_size-1)
+                    elif temp_list[1] == ship_list[0][1]:
+                        if (temp_list[0] > ship_list[0][0] + ship_size):
+                            error = True
+                            ship_list.pop(ship_size-1)
+                    temp_list.clear()
+                    if error == True:
+                        raise ValueError('Coordinate Invalid')
+                if error == False:
+                    break
             except Exception as e:
                 print(e)
-        temp_list.append(top)
-        temp_list.append(left)
-        ship_list.append(temp_list.copy())
-        temp_list.clear()
         if find_middle(ship_list, ship_size) == True:
             raise ValueError("Coordinates invalid please try again")
     except Exception as e:
         print(e)
-    return ship_list, True
+    return ship_list
 
 def player_board(ship_list, board, size):
     ship_temp = []
@@ -201,12 +208,24 @@ def player_board(ship_list, board, size):
     strtolst = ""
     for i in range(0, size):
         ship_temp = ship_list[i]
+        #print(ship_temp)
         temp_str = board[2+ship_temp[1]]
         strtolst = list(temp_str)
         strtolst[4+(ship_temp[0]*4)] = u"\u2588"
         temp_str = ''.join(strtolst)
         board[2+ship_temp[1]] = temp_str
 
+#updates the players board when their ships get hit
+def update_player_board(coordinate, board):
+    temp_str = ""
+    strtolst = []
+    temp_str = board[2+coordinate[1]]
+    strtolst = list(temp_str)
+    strtolst[4+(coordinate[0]*4)] = u"\u00D7"
+    temp_str = ''.join(strtolst)
+    board[2+coordinate[1]] = temp_str
+
+#The computer selects the coordinates for it's ships
 def ai_get_coordinates(size):
     ship_list = []
     ship = ""
@@ -255,17 +274,13 @@ def ai_get_coordinates(size):
     find_middle(ship_list, size)
     return ship_list
 
+#updates the attack board with the coordinates the user selected
 def update_attack_board(attack_board, attack_coordinate, ship1, ship2, ship3, ship4, ship5):
     board_text = ""
     temp_list = []
     attack = False
     temp_str = ""
     ship_number = 0
-    print(ship1)
-    print(ship2)
-    print(ship3)
-    print(ship4)
-    print(ship5)
     if attack_coordinate in ship1:
         attack = True
         ship_number = 1
@@ -302,7 +317,30 @@ def update_attack_board(attack_board, attack_coordinate, ship1, ship2, ship3, sh
             return True, ship5
     elif attack == False:
         temp_list = list(board_text)
-        temp_list[4+attack_coordinate[0]*4] = u"\u20DD"
+        temp_list[4+attack_coordinate[0]*4] = 'o'
         temp_str = ''.join(temp_list)
         attack_board[attack_coordinate[1]+2] = temp_str
         return False, temp_list
+#The computer guesses coordinates to attack
+def ai_guess_coordinate(ship1, ship2, ship3, ship4, ship5):
+    top = 0
+    left = 0
+    temp_list = []
+    
+    top = random.randint(0, 9)
+    left = random.randint(0, 9)
+    temp_list.append(top)
+    temp_list.append(left)
+
+    if temp_list in ship1:
+        return temp_list.copy(), ship1
+    elif temp_list in ship2:
+        return temp_list.copy(), ship2
+    elif temp_list in ship3:
+        return temp_list.copy(), ship3
+    elif temp_list in ship4:
+        return temp_list.copy(), ship4
+    elif temp_list in ship5:
+        return temp_list.copy(), ship5
+    else:
+        return temp_list.copy(), temp_list.copy()   
