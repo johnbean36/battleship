@@ -150,56 +150,60 @@ def get_coordinates(ship_name, ship_size):
     top = 0
     left = 0
     error = False
-    try:
-        while(True):
-            try:
-                ship = input()
-                ship = ship.upper()
-                top, left, error = convert_coordinates(ship)
-                if error == True:
-                    raise ValueError('Coordinate invalid')
-                break
-            except Exception as e:
-                print(e)
-        temp_list.append(top)
-        temp_list.append(left)
-        ship_list.append(temp_list.copy())
-        temp_list.clear()
-        if ship_size > 2:
-            for i in range(0,ship_size-2):
-                temp_list.append('')
-                temp_list.append('')
-                ship_list.append(temp_list.copy())
-                temp_list.clear()
-        print("Enter last coordinate for " + ship_name + ": ")
-        while(True):
-            try:
-                while (len(ship_list) < ship_size):
+    error2 = False
+    while True:
+        try:
+            while(True):
+                print("Enter first coordinate for " + ship_name)
+                print(ship_name + "'s are " + str(ship_size) + " slots: ")
+                try:
                     ship = input()
                     ship = ship.upper()
                     top, left, error = convert_coordinates(ship)
-                    temp_list.append(top)
-                    temp_list.append(left)
-                    ship_list.append(temp_list.copy())
-                    if temp_list[0] == ship_list[0][0]:
-                        if (temp_list[1] > ship_list[0][1] + ship_size):
-                            error = True
-                            ship_list.pop(ship_size-1)
-                    elif temp_list[1] == ship_list[0][1]:
-                        if (temp_list[0] > ship_list[0][0] + ship_size):
-                            error = True
-                            ship_list.pop(ship_size-1)
-                    temp_list.clear()
                     if error == True:
-                        raise ValueError('Coordinate Invalid')
+                        raise ValueError('Coordinate invalid')
+                    break
+                except Exception as e:
+                    print(e)
+            temp_list.append(top)
+            temp_list.append(left)
+            ship_list.append(temp_list.copy())
+            temp_list.clear()
+            if ship_size > 2:
+                for i in range(0,ship_size-2):
+                    temp_list.append('')
+                    temp_list.append('')
+                    ship_list.append(temp_list.copy())
+                    temp_list.clear()
+            print("Enter last coordinate for " + ship_name + ": ")
+            while True:
+                error = False
+                ship = input()
+                ship = ship.upper()
+                top, left, error = convert_coordinates(ship)
+                temp_list.append(top)
+                temp_list.append(left)
+                ship_list.append(temp_list.copy())
+                if temp_list[0] == ship_list[0][0]:
+                    if (temp_list[1] > (ship_list[0][1] + ship_size-1)) or (temp_list[1] < ship_list[0][1] + ship_size-1):
+                        error = True
+                        ship_list.pop(ship_size-1)        
+                elif temp_list[1] == ship_list[0][1]:
+                    if (temp_list[0] > ship_list[0][0] + ship_size-1) or (temp_list[0] < ship_list[0][0] + ship_size-1):
+                        error = True
+                        ship_list.pop(ship_size-1)
+                temp_list.clear()
+                if error:
+                    print('Coordinate Invalid')
                 if error == False:
                     break
-            except Exception as e:
-                print(e)
-        if find_middle(ship_list, ship_size) == True:
-            raise ValueError("Coordinates invalid please try again")
-    except Exception as e:
-        print(e)
+            if error != True:
+                if find_middle(ship_list, ship_size) == True:
+                    raise ValueError("Coordinates invalid please try again")
+        except Exception as e:
+            print(e)
+        if error != True:
+            break
     return ship_list
 
 def player_board(ship_list, board, size):
@@ -216,14 +220,21 @@ def player_board(ship_list, board, size):
         board[2+ship_temp[1]] = temp_str
 
 #updates the players board when their ships get hit
-def update_player_board(coordinate, board):
+def update_player_board(coordinate, board, hit):
     temp_str = ""
     strtolst = []
-    temp_str = board[2+coordinate[1]]
-    strtolst = list(temp_str)
-    strtolst[4+(coordinate[0]*4)] = u"\u00D7"
-    temp_str = ''.join(strtolst)
-    board[2+coordinate[1]] = temp_str
+    if hit == True:
+        temp_str = board[2+coordinate[1]]
+        strtolst = list(temp_str)
+        strtolst[4+(coordinate[0]*4)] = u"\u00D7"
+        temp_str = ''.join(strtolst)
+        board[2+coordinate[1]] = temp_str
+    elif hit == False:
+        temp_str = board[2+coordinate[1]]
+        strtolst = list(temp_str)
+        strtolst[4+(coordinate[0]*4)] = 'o'
+        temp_str = ''.join(strtolst)
+        board[2+coordinate[1]] = temp_str
 
 #The computer selects the coordinates for it's ships
 def ai_get_coordinates(size):
@@ -343,4 +354,4 @@ def ai_guess_coordinate(ship1, ship2, ship3, ship4, ship5):
     elif temp_list in ship5:
         return temp_list.copy(), ship5
     else:
-        return temp_list.copy(), temp_list.copy()   
+        return temp_list.copy(), temp_list.copy()

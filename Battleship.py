@@ -38,6 +38,9 @@ else:
     os.system('clear')
 library.welcome()
 print("by John Bass\n\n")
+print("Instructions: Select coordinates in the format such as B4 for your ships to be placed on the player board, then select coordinate to guess where the computer's ships are.")
+print("The coordinates you select will show up on the attack board as either a x or an o for a hit or a miss.  As the computer chooses coordinates that ")
+print("hit your ships, your ships blocks will be replaced by an x.  When all your ships or the computers ships have been sunk the game will be over.\n")
 while(main_loop):
     #variables for counting number of times a ship has been hit
     
@@ -60,23 +63,22 @@ while(main_loop):
     ai_hit = ""
     ai_display_text = ""
     ai_display_game = ""
+    ai_hit_history = []
     board = library.board()
     attack_board = library.board()
+    print("Player board\n")
     for num in range(12):
         print(board[num])
-    print("Enter first coordinate for Carrier ex. B4")
-    print("Carriers are 5 slots:")
     carrier_list = library.get_coordinates("Carrier", 5)
     library.player_board(carrier_list, board, 5)
     if os.name == 'nt':
         os.system('cls')
     else:
         os.system('clear')
+    print("Player board\n")
     for num in range(12):
         print(board[num])
     while check:
-        print("Enter first coordinate for Battleship")
-        print("Battleships are 4 slots:")
         battleship_list = library.get_coordinates("Battleship", 4)
         for i in battleship_list:
             if i in carrier_list:
@@ -90,12 +92,11 @@ while(main_loop):
         os.system('cls')
     else:
         os.system('clear')
+    print("Player board\n")
     for num in range(12):
         print(board[num])
     check = True
     while check:
-        print("Enter first coordinate for Cruiser")
-        print("Cruisers are 3 slots:")
         cruiser_list = library.get_coordinates("Cruiser", 3)
         for i in cruiser_list:
             if i in battleship_list:
@@ -113,12 +114,11 @@ while(main_loop):
         os.system('cls')
     else:
         os.system('clear')
+    print("Player board\n")
     for num in range(12):
         print(board[num])
     check = True
     while check:
-        print("Enter first coordinate for Submarine")
-        print("Submarines are 3 slots:")
         submarine_list = library.get_coordinates("Submarine", 3)
         for i in submarine_list:
             if i in carrier_list:
@@ -140,12 +140,11 @@ while(main_loop):
         os.system('cls')
     else:
         os.system('clear')
+    print("Player board\n")
     for num in range(12):
         print(board[num])
     check = True
     while check:
-        print("Enter first coordinate for Destroyer")
-        print("Destroyers are 2 slots")
         destroyer_list = library.get_coordinates("Destroyer", 2)
         for i in destroyer_list:
             if i in carrier_list:
@@ -171,17 +170,17 @@ while(main_loop):
         os.system('cls')
     else:
         os.system('clear')
+    print("Attack Board")
     for num in range(12):
         print(attack_board[num])
     print("\n")
+    print("Player Board")
     for num in range(12):
         print(board[num])
     ai_carrier_list = library.ai_get_coordinates(5)
-    print(ai_carrier_list)
     check = True
     while check:
         ai_battleship_list = library.ai_get_coordinates(4)
-        print(ai_battleship_list)
         for i in ai_battleship_list:
             if i in ai_carrier_list:
                 ai_battleship_list.clear()
@@ -191,7 +190,6 @@ while(main_loop):
     check = True
     while check:
         ai_cruiser_list = library.ai_get_coordinates(3)
-        print(ai_cruiser_list)
         for i in ai_cruiser_list:
             if i in ai_carrier_list:
                 ai_carrier_list.clear()
@@ -204,7 +202,6 @@ while(main_loop):
     check = True
     while check:
         ai_submarine_list = library.ai_get_coordinates(3)
-        print(ai_submarine_list)
         for i in ai_submarine_list:
             if i in ai_carrier_list:
                 ai_submarine_list.clear()
@@ -220,7 +217,6 @@ while(main_loop):
     check = True
     while check:
         ai_destroyer_list = library.ai_get_coordinates(2)
-        print(ai_destroyer_list)
         for i in ai_destroyer_list:
             if i in ai_carrier_list:
                 ai_destroyer_list.clear()
@@ -314,7 +310,7 @@ while(main_loop):
         if ai_ship_reference is carrier_list:
             ai_hit = "Your Carrier has been hit!"
             carrier_count += 1
-            library.update_player_board(ai_attack, board)
+            library.update_player_board(ai_attack, board, True)
             if carrier_count == 5:
                 ai_display_text = "Your Carrier has been sunk"
                 ship_count += 1
@@ -324,7 +320,7 @@ while(main_loop):
         elif ai_ship_reference is battleship_list:
             ai_hit = "Your Battleship has been hit!"
             battleship_count += 1
-            library.update_player_board(ai_attack, board)
+            library.update_player_board(ai_attack, board, True)
             if battleship_count == 4:
                 ai_display_text = "Your Battleship has been sunk"
                 ship_count += 1
@@ -334,7 +330,7 @@ while(main_loop):
         elif ai_ship_reference is cruiser_list:
             ai_hit = "Your Cruiser has been hit!"
             cruiser_count += 1
-            library.update_player_board(ai_attack, board)
+            library.update_player_board(ai_attack, board, True)
             if cruiser_count == 3:
                 ai_display_text = "Your Cruiser has been sunk"
                 ship_count += 1
@@ -344,7 +340,7 @@ while(main_loop):
         elif ai_ship_reference is submarine_list:
             ai_hit = "Your Submarine has been hit!"
             submarine_count += 1
-            library.update_player_board(ai_attack, board)
+            library.update_player_board(ai_attack, board, True)
             if submarine_count == 3:
                 ai_display_text = "Your Submarine has been sunk"
                 ship_count += 1
@@ -354,13 +350,16 @@ while(main_loop):
         elif ai_ship_reference is destroyer_list:
             ai_hit = "Your Destroyer has been hit!"
             destroyer_count += 1
-            library.update_player_board(ai_attack, board)
+            library.update_player_board(ai_attack, board, True)
             if destroyer_count == 2:
                 ai_display_text = "Your Destroyer has been sunk"
                 ship_count += 1
                 if ship_count == 5:
                     ai_display_game = "You have lost the game"
                     game = False
+        else:
+            library.update_player_board(ai_attack, board, False)
+            
             if os.name == 'nt':
                 os.system('cls')
             else:
@@ -379,8 +378,10 @@ while(main_loop):
             os.system('cls')
         else:
             os.system('clear')
+        print("Attack Board")
         for i in range(12):
                 print(attack_board[i])
+        print("Player Board")
         for i in range(12):
             print(board[i])
         print(display_hit)
@@ -400,9 +401,5 @@ while(main_loop):
         ai_display_text = ""
         ai_display_game = ""        
         check = True
-        
-    print("Do you want to play another game(y/n)")
-    if input().upper() == 'N' or input().upper() == "NO":
         main_loop = False
-    else:
-        continue
+
