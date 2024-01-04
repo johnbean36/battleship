@@ -17,5 +17,5 @@ CONTACT
     If you have problems, questions or suggestions please contact me at jmbass45@gmail.com
 
 NOTICE
-    This game is Copyrighted Copyright (c) 2003 John Bass.  The .pyc files is free for use as long
+    This game is Copyrighted Copyright (c) 2023 John Bass.  The .pyc files is free for use as long
     as it isn't backwards engineered
