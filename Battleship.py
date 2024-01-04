@@ -71,10 +71,6 @@ while(main_loop):
         print(board[num])
     carrier_list = library.get_coordinates("Carrier", 5)
     library.player_board(carrier_list, board, 5)
-    if os.name == 'nt':
-        os.system('cls')
-    else:
-        os.system('clear')
     print("Player board\n")
     for num in range(12):
         print(board[num])
